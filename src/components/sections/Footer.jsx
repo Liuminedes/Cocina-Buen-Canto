@@ -19,7 +19,7 @@ export default function Footer() {
             </div>
             <div style={{ width: '2rem', height: '2px', background: 'var(--cbc-naranja)', marginBottom: '1.1rem' }} />
             <p className="footer__tag">
-              Hamburguesas al carb\u00f3n y parrilla con sabor valluno aut\u00e9ntico desde El Caney, Cali.
+              Hamburguesas al carbón y parrilla con sabor valluno auténtico desde El Caney, Cali.
             </p>
           </div>
 

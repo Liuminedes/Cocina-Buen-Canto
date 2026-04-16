@@ -10,11 +10,11 @@ export default function ComoLlegar() {
     <section id="como-llegar" className="section" style={{ background: 'var(--cbc-carbon)' }}>
       <div className="wrap">
         <div className="sh">
-          <span className="overline">Encu\u00e9ntranos</span>
-          <h2>\u00bfC\u00f3mo llegar?</h2>
+          <span className="overline">Encuéntranos</span>
+          <h2>¿Cómo llegar?</h2>
           <span className="divider" />
           <p style={{ marginTop: '1.1rem' }}>
-            Estamos en El Caney, uno de los sectores m\u00e1s vibrantes de Cali.
+            Estamos en El Caney, uno de los sectores más vibrantes de Cali.
           </p>
         </div>
         <div className="llegar">

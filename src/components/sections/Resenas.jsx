@@ -40,10 +40,10 @@ export default function Resenas() {
       <div className="wrap">
         <div className="sh">
           <span className="overline">Lo que dicen nuestros clientes</span>
-          <h2>Rese\u00f1as</h2>
+          <h2>Reseñas</h2>
           <span className="divider" />
           <p style={{ marginTop: '1.1rem' }}>
-            La opini\u00f3n de quienes ya vivieron la experiencia CBC.
+            La opinión de quienes ya vivieron la experiencia CBC.
           </p>
         </div>
 
@@ -58,7 +58,7 @@ export default function Resenas() {
               onMouseEnter={(e) => { e.target.style.color = 'var(--cbc-naranja)' }}
               onMouseLeave={(e) => { e.target.style.color = 'var(--cbc-crema-dim)' }}
             >
-              Ver rese\u00f1as en Google Maps
+              Ver reseñas en Google Maps
             </a>
           </div>
 
@@ -70,13 +70,13 @@ export default function Resenas() {
                   \u00a1Gracias!
                 </h3>
                 <div style={{ width: '2rem', height: '2px', background: 'var(--cbc-naranja)', margin: '0 auto 1rem' }} />
-                <p style={{ fontSize: '0.95rem' }}>Tu opini\u00f3n es muy importante para nosotros.</p>
+                <p style={{ fontSize: '0.95rem' }}>Tu opinión es muy importante para nosotros.</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div>
                   <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', color: 'var(--cbc-crema)', marginBottom: '0.5rem' }}>
-                    \u00bfC\u00f3mo fue tu experiencia?
+                    ¿Cómo fue tu experiencia?
                   </h3>
                   <div style={{ width: '2rem', height: '2px', background: 'var(--cbc-naranja)' }} />
                 </div>
@@ -91,7 +91,7 @@ export default function Resenas() {
                   />
                 </div>
                 <div>
-                  <label className="flabel">Calificaci\u00f3n</label>
+                  <label className="flabel">Calificación</label>
                   <StarRating value={form.estrellas} onChange={(v) => setForm({ ...form, estrellas: v })} />
                 </div>
                 <div>
@@ -99,7 +99,7 @@ export default function Resenas() {
                   <textarea
                     rows={4}
                     className="finput"
-                    placeholder="Cu\u00e9ntanos qu\u00e9 te pareci\u00f3..."
+                    placeholder="Cuéntanos qué te pareció..."
                     value={form.comentario}
                     onChange={(e) => setForm({ ...form, comentario: e.target.value })}
                   />
