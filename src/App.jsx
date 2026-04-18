@@ -9,7 +9,7 @@ import Footer from './components/sections/Footer'
 
 function App() {
   return (
-    <main className="bg-[#0F0E0C] text-[#F5F0E8]">
+    <main>
       <Navbar />
       <Hero />
       <QuienesSomos />

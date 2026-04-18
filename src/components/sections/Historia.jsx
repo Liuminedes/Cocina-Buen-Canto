@@ -2,15 +2,15 @@ import { hitos } from '../../data/historia'
 
 export default function Historia() {
   return (
-    <section id="historia" className="section" style={{ background: 'var(--cbc-negro)' }}>
+    <section id="historia" className="section tl-bg">
       <div className="wrap">
         <div className="sh">
-          <span className="overline">De d&#243;nde venimos</span>
-          <h2>Antes &amp; Despu&#233;s</h2>
-          <span className="divider" />
+          <span className="overline">De dónde venimos</span>
+          <h2>Antes &amp; Después</h2>
+          <span className="sh-divider" />
           <p style={{ marginTop: '1.1rem' }}>
-            De una carpa en casa a un restaurante en El Caney.
-            Esta es la historia de <strong style={{ color: 'var(--cbc-naranja)' }}>Cocina Buen Canto</strong>.
+            De una carpa en casa a un restaurante en Cali.
+            Esta es la historia de <strong style={{ color: 'var(--cascara)' }}>Cocina Buen Canto</strong>.
           </p>
         </div>
         <div className="timeline">
@@ -18,9 +18,9 @@ export default function Historia() {
             <div key={h.id} className={`titem${h.lado === 'derecha' ? ' titem--r' : ''}`}>
               <div className="titem__media">
                 <div style={{ padding: '2.5rem', textAlign: 'center', opacity: 0.3 }}>
-                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📸</div>
-                  <span style={{ fontSize: '0.62rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--cbc-crema-muted)' }}>
-                    {h.año} &#8212; pr&#243;ximamente
+                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>&#128247;</div>
+                  <span style={{ fontSize: '0.62rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--brasas)' }}>
+                    {h.año}  –  próximamente
                   </span>
                 </div>
               </div>

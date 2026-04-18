@@ -1,36 +1,52 @@
 const vals = [
-  { ico: '🔥', t: 'Al carb&#243;n', d: 'Cada corte pasa por nuestra parrilla de carb&#243;n. Sin atajos, sin excusas.' },
-  { ico: '🌿', t: 'Ingredientes frescos', d: 'Hogao, guacamole, suero coste&#241;o. Productos locales de verdad.' },
-  { ico: '🤝', t: 'Hecho con amor', d: 'Nacimos en casa. Ese esp&#237;ritu familiar sigue vivo en cada plato.' },
-  { ico: '📍', t: 'Orgullo valluno', d: 'Somos de El Caney, Cali. Nuestra saz&#243;n, nuestra identidad.' },
+  {
+    ico: '&#128293;',
+    t: 'Al carb\u00f3n',
+    d: 'Cada corte pasa por nuestra parrilla de carb\u00f3n. La misma t\u00e9cnica de los fogones ancestrales del Valle, sin atajos.'
+  },
+  {
+    ico: '&#127807;',
+    t: 'Origen colombiano',
+    d: 'Hogao de Ginebra, suero coste\u00f1o, pl\u00e1tano del Pacifico, yuca del campo valluno. Ingredientes de nuestra tierra.'
+  },
+  {
+    ico: '&#129309;',
+    t: 'Hecho con amor',
+    d: 'Nacimos en casa. Ese esp\u00edritu de cocina familiar y comunitaria sigue vivo en cada plato que sale de nuestra cocina.'
+  },
+  {
+    ico: '&#127881;',
+    t: 'Orgullo cale\u00f1o',
+    d: 'Somos de Cali, Valle del Cauca. Nuestra saz\u00f3n, nuestra identidad, nuestro territorio.'
+  },
 ]
 
 export default function QuienesSomos() {
   return (
-    <section id="quienes-somos" className="section" style={{ background: 'var(--cbc-carbon)' }}>
+    <section id="quienes-somos" className="section qs-bg">
       <div className="wrap">
         <div className="sh">
           <span className="overline">Nuestra historia</span>
-          <h2>&#191;Qui&#233;nes somos?</h2>
-          <span className="divider" />
+          <h2>&iquest;Qui&eacute;nes somos?</h2>
+          <span className="sh-divider" />
           <p style={{ marginTop: '1.1rem' }}>
-            Cocina Buen Canto naci&#243; del amor por la parrilla, la buena mesa y la saz&#243;n valluna.
-            Lo que comenz&#243; como un sue&#241;o en casa hoy es un restaurante establecido en El Caney
-            que representa lo mejor de Cali en cada bocado.
+            Cocina Buen Canto naci&oacute; del amor por la parrilla, la buena mesa y la saz&oacute;n valluna.
+            Lo que comenz&oacute; como un sue&ntilde;o en casa hoy es un restaurante que reinterpreta
+            la cocina colombiana con orgullo, fuego y creatividad.
           </p>
         </div>
 
         <div className="ph-box">
-          <span style={{ fontSize: '2.5rem' }}>📸</span>
-          <span>Foto del local &#8212; pr&#243;ximamente</span>
+          <span style={{ fontSize: '2.5rem', opacity: 0.2 }}>&#128247;</span>
+          <span>Foto del local &mdash; pr&oacute;ximamente</span>
         </div>
 
         <div className="valores">
-          {vals.map((v) => (
-            <div key={v.t} className="vcard">
-              <div className="vcard__ico">{v.ico}</div>
-              <div className="vcard__title" dangerouslySetInnerHTML={{ __html: v.t }} />
-              <div className="vcard__desc"  dangerouslySetInnerHTML={{ __html: v.d }} />
+          {vals.map((v, i) => (
+            <div key={i} className="vcard">
+              <div className="vcard__ico" dangerouslySetInnerHTML={{ __html: v.ico }} />
+              <div className="vcard__title">{v.t}</div>
+              <div className="vcard__desc">{v.d}</div>
             </div>
           ))}
         </div>
