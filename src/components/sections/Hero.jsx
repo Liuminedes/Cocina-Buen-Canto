@@ -7,17 +7,21 @@ export default function Hero() {
       <div className="hero__accent" />
 
       <div className="hero__inner">
-        <div>
+        {/* ─── Columna izquierda ─── */}
+        <div className="hero__content">
           <div className="hero__tag">
             <span className="hero__tag-dot" />
             Cali, Valle del Cauca
           </div>
 
-          <h1 className="hero__h1">
-            Cocina<br />
-            <em>Buen</em><br />
-            Canto
-          </h1>
+          {/* 🔸 LOGO VERTICAL GRANDE */}
+          <div className="hero__logo-wrap">
+            <span
+              className="logo-mask logo-mask--vertical hero__logo"
+              role="img"
+              aria-label="Cocina Buen Canto"
+            />
+          </div>
 
           <p className="hero__refran">
             “A la mejor cocinera, se le ahuma la olla.”
@@ -52,12 +56,22 @@ export default function Hero() {
           </div>
         </div>
 
+        {/* ─── Columna derecha ─── */}
         <div className="hero__right">
           <div className="hero__frame">
-
-            {/* 🔸 LOGO GRANDE CBC (vertical, como elemento principal del frame) */}
-            <span className="logo-mask logo-mask--vertical hero__frame-logo" role="img" aria-label="Cocina Buen Canto" />
-
+            {/* 🔸 FOTO PRINCIPAL DEL RESTAURANTE */}
+            <img
+              src="/images/foto-restaurante-principal.png"
+              alt="Cocina Buen Canto - ambiente del restaurante"
+              className="hero__frame-img"
+              loading="eager"
+            />
+            {/* Sello decorativo flotante */}
+            <div className="hero__sello">
+              <span className="hero__sello-top">Desde</span>
+              <span className="hero__sello-year">2020</span>
+              <span className="hero__sello-bot">Tradición a la mesa</span>
+            </div>
           </div>
           <div className="hero__chip">
             <div className="hero__chip-ico">🔥</div>

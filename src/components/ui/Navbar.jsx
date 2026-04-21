@@ -33,7 +33,7 @@ export default function Navbar() {
 
             {/* 🔸 LOGO REDONDO CBC (vertical, sobre círculo naranja) */}
             <div className="nav__badge">
-              <span className="logo-mask logo-mask--vertical" role="img" aria-label="CBC" />
+              <span className="logo-mask logo-mask--abreviado" role="img" aria-label="CBC" />
             </div>
 
             {/* 🔸 LOGO WORDMARK "Cocina · Buen · Canto" (horizontal, al lado del círculo) */}

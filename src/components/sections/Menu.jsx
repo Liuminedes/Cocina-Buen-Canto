@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { categorias, formatPrecio } from '../../data/menu'
+import { loadCategorias, onMenuUpdate, formatPrecio } from '../../data/menu'
 
-function Modal({ item, onClose }) {
+function Modal({ item, catNombre, onClose }) {
   useEffect(() => {
     const fn = (e) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', fn)
@@ -9,8 +9,6 @@ function Modal({ item, onClose }) {
   }, [onClose])
 
   if (!item) return null
-
-  const catNombre = categorias.find(c => c.items.some(i => i.id === item.id))?.nombre || ''
 
   return (
     <div className="modal-overlay open" onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
@@ -69,9 +67,36 @@ function MenuItem({ item, onClick }) {
 }
 
 export default function Menu() {
-  const [activa, setActiva] = useState('burgers')
-  const [modal, setModal]   = useState(null)
-  const cat = categorias.find((c) => c.id === activa)
+  const [categorias, setCategorias] = useState(() => loadCategorias())
+  const [activa, setActiva] = useState(categorias[0]?.id)
+  const [modal, setModal] = useState(null)
+
+  // Se actualiza en vivo cuando el admin guarda cambios
+  useEffect(() => {
+    const fn = () => {
+      const nuevas = loadCategorias()
+      setCategorias(nuevas)
+      if (!nuevas.find(c => c.id === activa)) setActiva(nuevas[0]?.id)
+    }
+    return onMenuUpdate(fn)
+  }, [activa])
+
+  // Solo mostrar productos disponibles en el menú público
+  const categoriasVisibles = categorias
+    .map(c => ({ ...c, items: c.items.filter(i => i.disponible !== false) }))
+    .sort((a, b) => (a.orden ?? 0) - (b.orden ?? 0))
+
+  const cat = categoriasVisibles.find((c) => c.id === activa) || categoriasVisibles[0]
+
+  if (categoriasVisibles.length === 0) {
+    return (
+      <section id="menu" className="menu-page">
+        <div className="menu-content" style={{ textAlign: 'center', padding: '4rem 1rem' }}>
+          <p style={{ color: 'var(--cana)', opacity: 0.6 }}>Menú próximamente.</p>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section id="menu" className="menu-page">
@@ -82,7 +107,7 @@ export default function Menu() {
             <div className="menu-sidebar-title">Nuestro Menú</div>
             <div className="menu-sidebar-sub">Cocina Buen Canto</div>
           </div>
-          {categorias.map((c) => (
+          {categoriasVisibles.map((c) => (
             <button
               key={c.id}
               className={`menu-cat-btn${activa === c.id ? ' active' : ''}`}
@@ -97,7 +122,7 @@ export default function Menu() {
 
         <div>
           <div className="menu-tabs-mobile">
-            {categorias.map((c) => (
+            {categoriasVisibles.map((c) => (
               <button
                 key={c.id}
                 className={`menu-tab-m${activa === c.id ? ' active' : ''}`}
@@ -121,12 +146,17 @@ export default function Menu() {
                 <MenuItem key={item.id} item={item} onClick={setModal} />
               ))}
             </div>
+            {cat && cat.items.length === 0 && (
+              <p style={{ color: 'var(--cana)', opacity: 0.5, textAlign: 'center', padding: '2rem' }}>
+                Sin productos en esta categoría aún.
+              </p>
+            )}
           </div>
         </div>
 
       </div>
 
-      {modal && <Modal item={modal} onClose={() => setModal(null)} />}
+      {modal && <Modal item={modal} catNombre={cat?.nombre ?? ''} onClose={() => setModal(null)} />}
     </section>
   )
 }
