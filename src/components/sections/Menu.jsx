@@ -20,12 +20,12 @@ function Modal({ item, onClose }) {
             ? <img src={item.imagen} alt={item.nombre} />
             : (
               <div className="modal__img-ph">
-                <span style={{ fontSize: '3rem', opacity: 0.2 }}>&#127859;</span>
-                <span>Foto pr&#243;ximamente</span>
+                <span style={{ fontSize: '3rem', opacity: 0.2 }}>🍽️</span>
+                <span>Foto próximamente</span>
               </div>
             )
           }
-          <button className="modal__close" onClick={onClose}>&#x2715;</button>
+          <button className="modal__close" onClick={onClose} aria-label="Cerrar">✕</button>
         </div>
         <div className="modal__body">
           <div className="modal__cat">{catNombre}</div>
@@ -34,7 +34,7 @@ function Modal({ item, onClose }) {
           <p className="modal__desc">{item.descripcion}</p>
           <span className="modal__price">{formatPrecio(item.precio)}</span>
           <a
-            href={`https://wa.me/573157443542?text=${encodeURIComponent('Hola! Me interesa el ' + item.nombre + ' del men\u00fa de Cocina Buen Canto.')}`}
+            href={`https://wa.me/573157443542?text=${encodeURIComponent('¡Hola! Me interesa el ' + item.nombre + ' del menú de Cocina Buen Canto.')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="modal__wa"
@@ -53,7 +53,7 @@ function MenuItem({ item, onClick }) {
       <div className="mitem__thumb">
         {item.imagen
           ? <img src={item.imagen} alt={item.nombre} />
-          : <div className="mitem__thumb-ph">&#127859;</div>
+          : <div className="mitem__thumb-ph">🍽️</div>
         }
       </div>
       <div className="mitem__info">
@@ -79,7 +79,7 @@ export default function Menu() {
 
         <aside className="menu-sidebar">
           <div className="menu-sidebar-logo">
-            <div className="menu-sidebar-title">Nuestro Men&#250;</div>
+            <div className="menu-sidebar-title">Nuestro Menú</div>
             <div className="menu-sidebar-sub">Cocina Buen Canto</div>
           </div>
           {categorias.map((c) => (
@@ -111,7 +111,7 @@ export default function Menu() {
           <div className="menu-content">
             {cat && (
               <div className="menu-content-header">
-                <div className="menu-content-cat">Men&#250; CBC</div>
+                <div className="menu-content-cat">Menú CBC</div>
                 <h2 className="menu-content-title">{cat.nombre}</h2>
                 <p className="menu-content-desc">{cat.descripcion}</p>
               </div>

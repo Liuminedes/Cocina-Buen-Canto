@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react'
 const links = [
   { href: '#quienes-somos', label: 'Nosotros' },
   { href: '#historia',      label: 'Historia' },
-  { href: '#menu',          label: 'Men\u00fa' },
-  { href: '#resenas',       label: 'Rese\u00f1as' },
-  { href: '#como-llegar',   label: 'C\u00f3mo llegar' },
+  { href: '#menu',          label: 'Menú' },
+  { href: '#resenas',       label: 'Reseñas' },
+  { href: '#como-llegar',   label: 'Cómo llegar' },
 ]
 
 export default function Navbar() {
@@ -29,9 +29,16 @@ export default function Navbar() {
     <>
       <header className={`nav${stuck ? ' stuck' : ''}`}>
         <div className="nav__row">
-          <a href="#" className="nav__brand" onClick={close}>
-            <div className="nav__badge">C\u00b7B\u00b7C</div>
-            <span className="nav__name">Cocina Buen Canto</span>
+          <a href="#" className="nav__brand" onClick={close} aria-label="Cocina Buen Canto - Inicio">
+
+            {/* 🔸 LOGO REDONDO CBC (vertical, sobre círculo naranja) */}
+            <div className="nav__badge">
+              <span className="logo-mask logo-mask--vertical" role="img" aria-label="CBC" />
+            </div>
+
+            {/* 🔸 LOGO WORDMARK "Cocina · Buen · Canto" (horizontal, al lado del círculo) */}
+            <span className="logo-mask logo-mask--horizontal nav__wordmark" role="img" aria-label="Cocina Buen Canto" />
+
           </a>
           <nav>
             <ul className="nav__links">
@@ -44,7 +51,7 @@ export default function Navbar() {
             <a href="https://wa.me/573157443542" target="_blank" rel="noopener noreferrer" className="btn btn-fill nav__wa">
               WhatsApp
             </a>
-            <button className={`nav__burger${open ? ' open' : ''}`} onClick={() => setOpen(!open)} aria-label="Men\u00fa">
+            <button className={`nav__burger${open ? ' open' : ''}`} onClick={() => setOpen(!open)} aria-label="Menú">
               <span /><span /><span />
             </button>
           </div>
@@ -58,11 +65,11 @@ export default function Navbar() {
         <div className="nav__drawer-footer">
           <div className="nav__drawer-info">
             <strong>Horario</strong>
-            Martes a Domingo &mdash; 5:00 pm a 11:00 pm
+            Martes a Domingo — 5:00 pm a 11:00 pm
           </div>
           <div className="nav__drawer-info">
-            <strong>Ubicaci\u00f3n</strong>
-            Cali, Valle del Cauca, Colombia
+            <strong>Ubicación</strong>
+            Cali, Valle del Cauca
           </div>
           <a href="https://wa.me/573157443542" target="_blank" rel="noopener noreferrer" className="btn btn-fill btn-full" onClick={close}>
             Escribir por WhatsApp

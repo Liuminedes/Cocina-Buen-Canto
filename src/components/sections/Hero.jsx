@@ -20,17 +20,17 @@ export default function Hero() {
           </h1>
 
           <p className="hero__refran">
-            &ldquo;A la mejor cocinera, se le ahuma la olla.&rdquo;
+            “A la mejor cocinera, se le ahuma la olla.”
           </p>
 
           <p className="hero__sub">
             Reinterpretamos la cocina colombiana desde el fuego,
-            la tradici&oacute;n y el orgullo valluno. Parrilla de autor
-            con alma cale&ntilde;a, ingredientes de nuestra tierra.
+            la tradición y el orgullo valluno.
+            Parrilla de autor con alma caleña.
           </p>
 
           <div className="hero__ctas">
-            <a href="#menu" className="btn btn-fill">Ver el men&uacute;</a>
+            <a href="#menu" className="btn btn-fill">Ver el menú</a>
             <a href="https://wa.me/573157443542" target="_blank" rel="noopener noreferrer" className="btn btn-outline">
               WhatsApp
             </a>
@@ -39,11 +39,11 @@ export default function Hero() {
           <div className="hero__stats">
             <div>
               <span className="hero__stat-val">5+</span>
-              <span className="hero__stat-lbl">A&ntilde;os de sabor</span>
+              <span className="hero__stat-lbl">Años de sabor</span>
             </div>
             <div>
               <span className="hero__stat-val">100%</span>
-              <span className="hero__stat-lbl">Al carb&oacute;n</span>
+              <span className="hero__stat-lbl">Al carbón</span>
             </div>
             <div>
               <span className="hero__stat-val">Cali</span>
@@ -54,15 +54,15 @@ export default function Hero() {
 
         <div className="hero__right">
           <div className="hero__frame">
-            <div className="hero__frame-ph">
-              <span style={{ fontSize: '3rem', opacity: 0.15 }}>&#127859;</span>
-              <span>Foto principal</span>
-            </div>
+
+            {/* 🔸 LOGO GRANDE CBC (vertical, como elemento principal del frame) */}
+            <span className="logo-mask logo-mask--vertical hero__frame-logo" role="img" aria-label="Cocina Buen Canto" />
+
           </div>
           <div className="hero__chip">
-            <div className="hero__chip-ico">&#128293;</div>
+            <div className="hero__chip-ico">🔥</div>
             <div>
-              <strong>Al carb&oacute;n</strong>
+              <strong>Al carbón</strong>
               <span>Parrilla artesanal</span>
             </div>
           </div>

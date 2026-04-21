@@ -17,16 +17,11 @@ export default function Historia() {
           {hitos.map((h) => (
             <div key={h.id} className={`titem${h.lado === 'derecha' ? ' titem--r' : ''}`}>
               <div className="titem__media">
-                <div style={{ padding: '2.5rem', textAlign: 'center', opacity: 0.3 }}>
-                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>&#128247;</div>
-                  <span style={{ fontSize: '0.62rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--brasas)' }}>
-                    {h.año}  –  próximamente
-                  </span>
-                </div>
+                <span className="titem__media-year">{h.anio}</span>
               </div>
               <div className="titem__dot" />
               <div className="titem__text">
-                <div className="titem__year">{h.año}</div>
+                <div className="titem__year">{h.anio}</div>
                 <h3 className="titem__title">{h.titulo}</h3>
                 <div className="titem__sub">{h.subtitulo}</div>
                 <div className="titem__line" />
