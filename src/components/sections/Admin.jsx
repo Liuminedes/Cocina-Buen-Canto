@@ -2,52 +2,58 @@ import { useState, useEffect } from 'react'
 import Login from '../admin/Login'
 import ProductosPanel from '../admin/ProductosPanel'
 import CategoriasPanel from '../admin/CategoriasPanel'
-import { loadCategorias, onMenuUpdate, resetMenu } from '../../data/menu'
+import { loadCategorias, onMenuUpdate } from '../../data/menu'
+import { getSession, onAuthChange, signOut } from '../../lib/supabase'
 
-const SESSION_KEY = 'cbc:admin:session'
 const SECTIONS = [
   { id: 'productos',  label: 'Productos',  icon: '🍔' },
   { id: 'categorias', label: 'Categorías', icon: '🗂️' },
 ]
 
 export default function Admin() {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem(SESSION_KEY) === 'ok')
+  const [session, setSession] = useState(null)
+  const [authLoading, setAuthLoading] = useState(true)
   const [section, setSection] = useState('productos')
   const [mobileNav, setMobileNav] = useState(false)
-  const [categorias, setCategorias] = useState(() => loadCategorias())
+  const [categorias, setCategorias] = useState([])
 
   useEffect(() => {
-    return onMenuUpdate(() => setCategorias(loadCategorias()))
+    getSession().then(s => { setSession(s); setAuthLoading(false) })
+    return onAuthChange(s => setSession(s))
   }, [])
 
-  if (!authed) {
-    return <Login onSuccess={() => { sessionStorage.setItem(SESSION_KEY, 'ok'); setAuthed(true) }} />
+  const reload = async () => {
+    try { setCategorias(await loadCategorias()) }
+    catch (e) { console.error(e) }
   }
 
-  const logout = () => {
-    sessionStorage.removeItem(SESSION_KEY)
-    setAuthed(false)
+  useEffect(() => { if (session) reload() }, [session])
+  useEffect(() => onMenuUpdate(reload), [])
+
+  if (authLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: 'var(--avena-lt)', color: 'var(--brasas)', fontFamily: 'var(--font-ui)',
+      }}>Cargando…</div>
+    )
   }
 
-  const handleReset = () => {
-    if (!confirm('¿Restaurar el menú a los valores originales? Se perderán todos los cambios y fotos.')) return
-    resetMenu()
-  }
+  if (!session) return <Login />
 
   const totalProductos = categorias.reduce((acc, c) => acc + c.items.length, 0)
   const destacados = categorias.reduce((acc, c) => acc + c.items.filter(i => i.destacado).length, 0)
 
   return (
     <div className="admin">
-      {/* Sidebar */}
       <aside className={`admin__sidebar${mobileNav ? ' open' : ''}`}>
         <div className="admin__sidebar-brand">
           <div className="admin__sidebar-badge">
             <span className="logo-mask logo-mask--abreviado" role="img" aria-label="CBC" />
           </div>
           <div>
-              <span className="logo-mask logo-mask--horizontal sidebar__logo" role="img" aria-label="Cocina Buen Canto" />
             <div className="admin__sidebar-eyebrow">Admin</div>
+            <div className="admin__sidebar-name">Cocina Buen Canto</div>
           </div>
         </div>
 
@@ -81,8 +87,7 @@ export default function Admin() {
 
         <div className="admin__sidebar-foot">
           <a href="/" className="admin__side-link">← Ver sitio público</a>
-          <button onClick={handleReset} className="admin__side-link">↺ Restaurar menú</button>
-          <button onClick={logout} className="admin__side-link admin__side-link--danger">
+          <button onClick={signOut} className="admin__side-link admin__side-link--danger">
             Cerrar sesión
           </button>
         </div>
@@ -90,7 +95,6 @@ export default function Admin() {
 
       {mobileNav && <div className="admin__overlay" onClick={() => setMobileNav(false)} />}
 
-      {/* Main */}
       <div className="admin__main">
         <header className="admin__topbar">
           <button
@@ -105,13 +109,13 @@ export default function Admin() {
           </div>
           <div className="admin__topbar-user">
             <span className="admin__user-dot" />
-            Sesión activa
+            {session.user?.email}
           </div>
         </header>
 
         <div className="admin__content">
-          {section === 'productos'  && <ProductosPanel categorias={categorias} />}
-          {section === 'categorias' && <CategoriasPanel categorias={categorias} />}
+          {section === 'productos'  && <ProductosPanel categorias={categorias} onChange={reload} />}
+          {section === 'categorias' && <CategoriasPanel categorias={categorias} onChange={reload} />}
         </div>
       </div>
     </div>

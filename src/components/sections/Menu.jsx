@@ -33,8 +33,7 @@ function Modal({ item, catNombre, onClose }) {
           <span className="modal__price">{formatPrecio(item.precio)}</span>
           <a
             href={`https://wa.me/573157443542?text=${encodeURIComponent('¡Hola! Me interesa el ' + item.nombre + ' del menú de Cocina Buen Canto.')}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            target="_blank" rel="noopener noreferrer"
             className="modal__wa"
           >
             Preguntar por WhatsApp
@@ -67,28 +66,42 @@ function MenuItem({ item, onClick }) {
 }
 
 export default function Menu() {
-  const [categorias, setCategorias] = useState(() => loadCategorias())
-  const [activa, setActiva] = useState(categorias[0]?.id)
+  const [categorias, setCategorias] = useState([])
+  const [activa, setActiva] = useState(null)
   const [modal, setModal] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  // Se actualiza en vivo cuando el admin guarda cambios
-  useEffect(() => {
-    const fn = () => {
-      const nuevas = loadCategorias()
-      setCategorias(nuevas)
-      if (!nuevas.find(c => c.id === activa)) setActiva(nuevas[0]?.id)
+  const reload = async () => {
+    try {
+      const cats = await loadCategorias()
+      setCategorias(cats)
+      setActiva(prev => cats.find(c => c.id === prev) ? prev : cats[0]?.id)
+    } catch (e) {
+      console.error('[Menu]', e)
+    } finally {
+      setLoading(false)
     }
-    return onMenuUpdate(fn)
-  }, [activa])
+  }
 
-  // Solo mostrar productos disponibles en el menú público
-  const categoriasVisibles = categorias
+  useEffect(() => { reload() }, [])
+  useEffect(() => onMenuUpdate(reload), [])
+
+  const visibles = categorias
     .map(c => ({ ...c, items: c.items.filter(i => i.disponible !== false) }))
-    .sort((a, b) => (a.orden ?? 0) - (b.orden ?? 0))
 
-  const cat = categoriasVisibles.find((c) => c.id === activa) || categoriasVisibles[0]
+  const cat = visibles.find((c) => c.id === activa) || visibles[0]
 
-  if (categoriasVisibles.length === 0) {
+  if (loading) {
+    return (
+      <section id="menu" className="menu-page">
+        <div className="menu-content" style={{ textAlign: 'center', padding: '4rem 1rem' }}>
+          <p style={{ color: 'var(--cana)', opacity: 0.6 }}>Cargando menú…</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (visibles.length === 0) {
     return (
       <section id="menu" className="menu-page">
         <div className="menu-content" style={{ textAlign: 'center', padding: '4rem 1rem' }}>
@@ -101,13 +114,12 @@ export default function Menu() {
   return (
     <section id="menu" className="menu-page">
       <div className="menu-page-inner">
-
         <aside className="menu-sidebar">
           <div className="menu-sidebar-logo">
             <div className="menu-sidebar-title">Nuestro Menú</div>
             <div className="menu-sidebar-sub">Cocina Buen Canto</div>
           </div>
-          {categoriasVisibles.map((c) => (
+          {visibles.map((c) => (
             <button
               key={c.id}
               className={`menu-cat-btn${activa === c.id ? ' active' : ''}`}
@@ -122,7 +134,7 @@ export default function Menu() {
 
         <div>
           <div className="menu-tabs-mobile">
-            {categoriasVisibles.map((c) => (
+            {visibles.map((c) => (
               <button
                 key={c.id}
                 className={`menu-tab-m${activa === c.id ? ' active' : ''}`}
@@ -153,7 +165,6 @@ export default function Menu() {
             )}
           </div>
         </div>
-
       </div>
 
       {modal && <Modal item={modal} catNombre={cat?.nombre ?? ''} onClose={() => setModal(null)} />}

@@ -1,25 +1,26 @@
 import { useState } from 'react'
+import { signIn } from '../../lib/supabase'
 
-const PASSWORD = 'cbc2026'
-
-export default function Login({ onSuccess }) {
-  const [pass, setPass] = useState('')
+export default function Login() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     setError('')
     setLoading(true)
-    setTimeout(() => {
-      if (pass === PASSWORD) {
-        onSuccess()
-      } else {
-        setError('Contraseña incorrecta')
-        setPass('')
-      }
+    try {
+      await signIn(email, password)
+    } catch (err) {
+      const msg = err.message === 'Invalid login credentials'
+        ? 'Correo o contraseña incorrectos'
+        : (err.message || 'Error al iniciar sesión')
+      setError(msg)
+    } finally {
       setLoading(false)
-    }, 400)
+    }
   }
 
   return (
@@ -37,26 +38,29 @@ export default function Login({ onSuccess }) {
 
         <form onSubmit={submit} className="login__form">
           <div>
+            <label className="flabel">Correo</label>
+            <input
+              type="email" className="finput"
+              placeholder="admin@cocinabuencanto.co"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email" required autoFocus
+            />
+          </div>
+          <div>
             <label className="flabel">Contraseña</label>
             <input
-              type="password"
-              className="finput"
+              type="password" className="finput"
               placeholder="••••••••"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
-              autoFocus
-              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password" required
             />
           </div>
 
           {error && <div className="login__error">⚠️ {error}</div>}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn btn-fill btn-full"
-            style={{ marginTop: '0.5rem' }}
-          >
+          <button type="submit" disabled={loading} className="btn btn-fill btn-full" style={{ marginTop: '0.5rem' }}>
             {loading ? 'Ingresando…' : 'Ingresar'}
           </button>
 

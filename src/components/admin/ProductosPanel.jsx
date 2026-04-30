@@ -1,35 +1,11 @@
 import { useState, useMemo } from 'react'
-import { loadCategorias, saveCategorias, formatPrecio } from '../../data/menu'
+import {
+  createProducto, updateProducto, deleteProducto,
+  uploadImagen, deleteImagen,
+} from '../../lib/supabase'
+import { notifyUpdate, formatPrecio } from '../../data/menu'
 
-// Convertir archivo a base64 redimensionando si es muy grande
-function imageToBase64(file, maxWidth = 1200) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onerror = reject
-    reader.onload = (e) => {
-      const img = new Image()
-      img.onerror = reject
-      img.onload = () => {
-        // Redimensionar si excede maxWidth
-        let { width, height } = img
-        if (width > maxWidth) {
-          height = (height * maxWidth) / width
-          width = maxWidth
-        }
-        const canvas = document.createElement('canvas')
-        canvas.width = width
-        canvas.height = height
-        const ctx = canvas.getContext('2d')
-        ctx.drawImage(img, 0, 0, width, height)
-        resolve(canvas.toDataURL('image/jpeg', 0.85))
-      }
-      img.src = e.target.result
-    }
-    reader.readAsDataURL(file)
-  })
-}
-
-export default function ProductosPanel({ categorias }) {
+export default function ProductosPanel({ categorias, onChange }) {
   const [filtro, setFiltro] = useState('all')
   const [busqueda, setBusqueda] = useState('')
   const [editing, setEditing] = useState(null)
@@ -52,23 +28,26 @@ export default function ProductosPanel({ categorias }) {
     [categorias]
   )
 
-  const handleDelete = (p) => {
+  const refresh = () => { onChange?.(); notifyUpdate() }
+
+  const handleDelete = async (p) => {
     if (!confirm(`¿Eliminar "${p.nombre}"?`)) return
-    const all = loadCategorias()
-    const updated = all.map(c => ({
-      ...c,
-      items: c.items.filter(i => i.id !== p.id),
-    }))
-    saveCategorias(updated)
+    try {
+      if (p.imagen_path) await deleteImagen(p.imagen_path)
+      await deleteProducto(p.id)
+      refresh()
+    } catch (e) {
+      alert('Error al eliminar: ' + e.message)
+    }
   }
 
-  const togglePropiedad = (p, prop) => {
-    const all = loadCategorias()
-    const updated = all.map(c => ({
-      ...c,
-      items: c.items.map(i => i.id === p.id ? { ...i, [prop]: !i[prop] } : i),
-    }))
-    saveCategorias(updated)
+  const togglePropiedad = async (p, prop) => {
+    try {
+      await updateProducto(p.id, { [prop]: !p[prop] })
+      refresh()
+    } catch (e) {
+      alert('Error: ' + e.message)
+    }
   }
 
   return (
@@ -95,8 +74,7 @@ export default function ProductosPanel({ categorias }) {
 
         <div className="pp__actions">
           <input
-            type="text"
-            className="finput pp__search"
+            type="text" className="finput pp__search"
             placeholder="Buscar producto…"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
@@ -166,14 +144,14 @@ export default function ProductosPanel({ categorias }) {
           producto={editing}
           categorias={categorias}
           onClose={() => { setEditing(null); setCreating(false) }}
+          onSaved={() => { setEditing(null); setCreating(false); refresh() }}
         />
       )}
     </div>
   )
 }
 
-// ═══════════════════════════════════════════════════════
-function ProductoModal({ producto, categorias, onClose }) {
+function ProductoModal({ producto, categorias, onClose, onSaved }) {
   const isNew = !producto
   const [form, setForm] = useState({
     nombre: producto?.nombre ?? '',
@@ -182,12 +160,15 @@ function ProductoModal({ producto, categorias, onClose }) {
     categoria_id: producto?.categoria_id ?? categorias[0]?.id ?? '',
     destacado: producto?.destacado ?? false,
     disponible: producto?.disponible !== false,
-    imagen: producto?.imagen ?? null,
+    orden: producto?.orden ?? 0,
   })
+  const [imagenFile, setImagenFile] = useState(null)
+  const [preview, setPreview] = useState(producto?.imagen ?? null)
+  const [removeImage, setRemoveImage] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  const onFile = async (e) => {
+  const onFile = (e) => {
     const f = e.target.files?.[0]
     if (!f) return
     if (f.size > 5 * 1024 * 1024) {
@@ -195,19 +176,18 @@ function ProductoModal({ producto, categorias, onClose }) {
       return
     }
     setError('')
-    try {
-      const base64 = await imageToBase64(f, 1200)
-      setForm(prev => ({ ...prev, imagen: base64 }))
-    } catch {
-      setError('No se pudo procesar la imagen')
-    }
+    setImagenFile(f)
+    setPreview(URL.createObjectURL(f))
+    setRemoveImage(false)
   }
 
   const quitarImagen = () => {
-    setForm(prev => ({ ...prev, imagen: null }))
+    setImagenFile(null)
+    setPreview(null)
+    setRemoveImage(true)
   }
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     setError('')
 
@@ -216,52 +196,47 @@ function ProductoModal({ producto, categorias, onClose }) {
     if (Number(form.precio) < 0) return setError('Precio inválido')
 
     setSaving(true)
-
-    const all = loadCategorias()
-    const payload = {
-      id: producto?.id ?? Date.now(),
-      nombre: form.nombre.trim(),
-      descripcion: form.descripcion.trim(),
-      precio: Number(form.precio) || 0,
-      imagen: form.imagen,
-      destacado: form.destacado,
-      disponible: form.disponible,
-    }
-
-    let updated
-    if (isNew) {
-      // Añadir a la categoría seleccionada
-      updated = all.map(c =>
-        c.id === form.categoria_id
-          ? { ...c, items: [...c.items, payload] }
-          : c
-      )
-    } else {
-      // Puede haber cambiado de categoría
-      const categoriaActual = all.find(c => c.items.some(i => i.id === producto.id))?.id
-      if (categoriaActual === form.categoria_id) {
-        // Misma categoría: actualizar en el mismo array
-        updated = all.map(c => ({
-          ...c,
-          items: c.items.map(i => i.id === producto.id ? payload : i),
-        }))
-      } else {
-        // Cambió de categoría: sacar de la vieja, meter en la nueva
-        updated = all.map(c => {
-          if (c.id === categoriaActual) {
-            return { ...c, items: c.items.filter(i => i.id !== producto.id) }
-          }
-          if (c.id === form.categoria_id) {
-            return { ...c, items: [...c.items, payload] }
-          }
-          return c
-        })
+    try {
+      const payload = {
+        nombre: form.nombre.trim(),
+        descripcion: form.descripcion.trim(),
+        precio: Number(form.precio) || 0,
+        categoria_id: form.categoria_id,
+        destacado: form.destacado,
+        disponible: form.disponible,
+        orden: Number(form.orden) || 0,
       }
-    }
 
-    const ok = saveCategorias(updated)
-    setSaving(false)
-    if (ok) onClose()
+      if (isNew) {
+        const creado = await createProducto(payload)
+        if (imagenFile) {
+          const { path, publicUrl } = await uploadImagen(imagenFile, creado.id)
+          await updateProducto(creado.id, { imagen: publicUrl, imagen_path: path })
+        }
+      } else {
+        let imagen      = producto.imagen
+        let imagen_path = producto.imagen_path
+
+        if (imagenFile) {
+          const up = await uploadImagen(imagenFile, producto.id)
+          if (producto.imagen_path) await deleteImagen(producto.imagen_path)
+          imagen = up.publicUrl
+          imagen_path = up.path
+        } else if (removeImage && producto.imagen_path) {
+          await deleteImagen(producto.imagen_path)
+          imagen = null
+          imagen_path = null
+        }
+
+        await updateProducto(producto.id, { ...payload, imagen, imagen_path })
+      }
+
+      onSaved()
+    } catch (e) {
+      setError(e.message || 'Error al guardar')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -276,13 +251,12 @@ function ProductoModal({ producto, categorias, onClose }) {
         </header>
 
         <form onSubmit={submit} className="pm__body">
-          {/* Imagen */}
           <div>
             <label className="flabel">Imagen del producto</label>
             <div className="pm__dropzone">
-              {form.imagen ? (
+              {preview ? (
                 <div className="pm__preview">
-                  <img src={form.imagen} alt="Preview" />
+                  <img src={preview} alt="Preview" />
                   <button type="button" className="pm__preview-del" onClick={quitarImagen}>
                     🗑️ Quitar
                   </button>
@@ -296,7 +270,7 @@ function ProductoModal({ producto, categorias, onClose }) {
                 </label>
               )}
             </div>
-            {form.imagen && (
+            {preview && (
               <label className="pm__replace">
                 <input type="file" accept="image/*" onChange={onFile} hidden />
                 🔄 Cambiar imagen
@@ -304,7 +278,6 @@ function ProductoModal({ producto, categorias, onClose }) {
             )}
           </div>
 
-          {/* Campos */}
           <div className="pm__grid">
             <div className="pm__col pm__col--wide">
               <label className="flabel">Nombre *</label>
@@ -322,8 +295,7 @@ function ProductoModal({ producto, categorias, onClose }) {
                 type="number" className="finput" min="0" step="500"
                 value={form.precio}
                 onChange={(e) => setForm({ ...form, precio: e.target.value })}
-                placeholder="32000"
-                required
+                placeholder="32000" required
               />
             </div>
             <div className="pm__col">
@@ -348,21 +320,23 @@ function ProductoModal({ producto, categorias, onClose }) {
                 placeholder="Ingredientes, preparación, porción…"
               />
             </div>
+            <div className="pm__col">
+              <label className="flabel">Orden</label>
+              <input
+                type="number" className="finput" min="0"
+                value={form.orden}
+                onChange={(e) => setForm({ ...form, orden: e.target.value })}
+              />
+            </div>
             <div className="pm__col pm__col--checks">
               <label className="pm__check">
-                <input
-                  type="checkbox"
-                  checked={form.destacado}
-                  onChange={(e) => setForm({ ...form, destacado: e.target.checked })}
-                />
+                <input type="checkbox" checked={form.destacado}
+                  onChange={(e) => setForm({ ...form, destacado: e.target.checked })} />
                 <span>★ Destacado</span>
               </label>
               <label className="pm__check">
-                <input
-                  type="checkbox"
-                  checked={form.disponible}
-                  onChange={(e) => setForm({ ...form, disponible: e.target.checked })}
-                />
+                <input type="checkbox" checked={form.disponible}
+                  onChange={(e) => setForm({ ...form, disponible: e.target.checked })} />
                 <span>Visible en el menú</span>
               </label>
             </div>

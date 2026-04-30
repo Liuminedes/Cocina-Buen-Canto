@@ -1,19 +1,26 @@
 import { useState } from 'react'
-import { loadCategorias, saveCategorias } from '../../data/menu'
+import { upsertCategoria, deleteCategoria } from '../../lib/supabase'
+import { notifyUpdate } from '../../data/menu'
 
-export default function CategoriasPanel({ categorias }) {
+export default function CategoriasPanel({ categorias, onChange }) {
   const [editing, setEditing] = useState(null)
   const [creating, setCreating] = useState(false)
 
-  const handleDelete = (c) => {
+  const refresh = () => { onChange?.(); notifyUpdate() }
+
+  const handleDelete = async (c) => {
     const n = c.items.length
     const msg = n > 0
       ? `La categoría "${c.nombre}" tiene ${n} producto(s). Se eliminarán también. ¿Continuar?`
       : `¿Eliminar la categoría "${c.nombre}"?`
     if (!confirm(msg)) return
 
-    const all = loadCategorias()
-    saveCategorias(all.filter(x => x.id !== c.id))
+    try {
+      await deleteCategoria(c.id)
+      refresh()
+    } catch (e) {
+      alert('Error: ' + e.message)
+    }
   }
 
   return (
@@ -64,14 +71,14 @@ export default function CategoriasPanel({ categorias }) {
           categoria={editing}
           existingIds={categorias.map(c => c.id)}
           onClose={() => { setEditing(null); setCreating(false) }}
+          onSaved={() => { setEditing(null); setCreating(false); refresh() }}
         />
       )}
     </div>
   )
 }
 
-// ═══════════════════════════════════════════════════════
-function CategoriaModal({ categoria, existingIds, onClose }) {
+function CategoriaModal({ categoria, existingIds, onClose, onSaved }) {
   const isNew = !categoria
   const [form, setForm] = useState({
     id: categoria?.id ?? '',
@@ -83,7 +90,7 @@ function CategoriaModal({ categoria, existingIds, onClose }) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     setError('')
 
@@ -97,20 +104,20 @@ function CategoriaModal({ categoria, existingIds, onClose }) {
     }
 
     setSaving(true)
-    const all = loadCategorias()
-    let updated
-    if (isNew) {
-      updated = [...all, { ...form, orden: Number(form.orden) || 0, items: [] }]
-    } else {
-      updated = all.map(c =>
-        c.id === categoria.id
-          ? { ...c, ...form, orden: Number(form.orden) || 0 }
-          : c
-      )
+    try {
+      await upsertCategoria({
+        id: form.id,
+        nombre: form.nombre.trim(),
+        descripcion: form.descripcion.trim(),
+        emoji: form.emoji,
+        orden: Number(form.orden) || 0,
+      })
+      onSaved()
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setSaving(false)
     }
-    const ok = saveCategorias(updated)
-    setSaving(false)
-    if (ok) onClose()
   }
 
   return (
@@ -133,8 +140,7 @@ function CategoriaModal({ categoria, existingIds, onClose }) {
                 value={form.id}
                 onChange={(e) => setForm({ ...form, id: e.target.value.toLowerCase() })}
                 placeholder="burgers"
-                disabled={!isNew}
-                required
+                disabled={!isNew} required
               />
               <small className="pm__hint">Identificador único. No se puede cambiar después.</small>
             </div>
@@ -144,8 +150,7 @@ function CategoriaModal({ categoria, existingIds, onClose }) {
                 type="text" className="finput"
                 value={form.emoji}
                 onChange={(e) => setForm({ ...form, emoji: e.target.value })}
-                maxLength={2}
-                placeholder="🍔"
+                maxLength={2} placeholder="🍔"
               />
             </div>
             <div className="pm__col pm__col--wide">
@@ -154,8 +159,7 @@ function CategoriaModal({ categoria, existingIds, onClose }) {
                 type="text" className="finput"
                 value={form.nombre}
                 onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-                placeholder="Burgers"
-                required
+                placeholder="Burgers" required
               />
             </div>
             <div className="pm__col pm__col--wide">
