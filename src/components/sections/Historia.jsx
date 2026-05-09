@@ -17,7 +17,11 @@ export default function Historia() {
           {hitos.map((h) => (
             <div key={h.id} className={`titem${h.lado === 'derecha' ? ' titem--r' : ''}`}>
               <div className="titem__media">
-                <span className="titem__media-year">{h.anio}</span>
+                {h.imagen ? (
+                  <img src={h.imagen} alt={`${h.titulo} - ${h.anio}`} className="titem__media-img" />
+                ) : (
+                  <span className="titem__media-year">{h.anio}</span>
+                )}
               </div>
               <div className="titem__dot" />
               <div className="titem__text">

@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    PANEL ADMINISTRATIVO — Cocina Buen Canto
-   Consistente con la paleta y tipografía del sitio público.
+   Tipografía: Outfit para títulos · Manrope para UI · Playfair solo cuando es editorial
    ═══════════════════════════════════════════════════════════════ */
 
 /* ─── LOGIN ──────────────────────────────────────── */
@@ -52,10 +52,11 @@
   margin-bottom: 0.3rem;
 }
 .login__title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.3rem; font-weight: 800;
   color: var(--totumo);
   line-height: 1;
+  letter-spacing: -0.015em;
 }
 
 .login__form { display: flex; flex-direction: column; gap: 1.1rem; }
@@ -86,7 +87,6 @@
   color: var(--brasas);
 }
 
-/* Sidebar */
 .admin__sidebar {
   width: 260px; flex-shrink: 0;
   background: var(--totumo);
@@ -134,12 +134,12 @@
   margin-bottom: 0.2rem;
 }
 .admin__sidebar-name {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 0.95rem; font-weight: 700;
   color: var(--avena-lt); line-height: 1.1;
+  letter-spacing: -0.01em;
 }
 
-/* Stats mini del sidebar */
 .admin__stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -156,10 +156,11 @@
   display: flex; flex-direction: column; gap: 0.15rem;
 }
 .admin__stat-val {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.1rem; font-weight: 800;
   color: var(--cascara);
   line-height: 1;
+  letter-spacing: -0.02em;
 }
 .admin__stat-lbl {
   font-size: 0.55rem; font-weight: 700;
@@ -212,7 +213,6 @@
 .admin__side-link:hover { opacity: 1; background: rgba(255,255,255,0.06); }
 .admin__side-link--danger:hover { color: #ff8f73; }
 
-/* Main + topbar */
 .admin__main {
   flex: 1;
   min-width: 0;
@@ -240,10 +240,11 @@
 @media (min-width: 900px) { .admin__burger { display: none; } }
 
 .admin__topbar-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.2rem; font-weight: 700;
   color: var(--totumo);
   flex: 1;
+  letter-spacing: -0.015em;
 }
 @media (min-width: 640px) { .admin__topbar-title { font-size: 1.4rem; } }
 
@@ -276,9 +277,7 @@
   background: var(--crema);
 }
 
-/* ═══════════════════════════════════════════════════
-   PRODUCTOS / CATEGORÍAS — TOOLBAR
-   ═══════════════════════════════════════════════════ */
+/* PRODUCTOS / CATEGORÍAS — TOOLBAR */
 .pp { display: flex; flex-direction: column; gap: 1.5rem; }
 
 .pp__toolbar {
@@ -290,10 +289,11 @@
 
 .pp__head-info { flex: 1; }
 .pp__heading {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.4rem; font-weight: 800;
   color: var(--totumo);
   margin-bottom: 0.3rem;
+  letter-spacing: -0.02em;
 }
 .pp__subheading {
   font-size: 0.88rem;
@@ -353,9 +353,7 @@
   font-size: 0.88rem;
 }
 
-/* ═══════════════════════════════════════════════════
-   GRID DE PRODUCTOS
-   ═══════════════════════════════════════════════════ */
+/* GRID DE PRODUCTOS */
 .pp__grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -414,10 +412,11 @@
   margin-bottom: 0.4rem;
 }
 .pcard__name {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.1rem; font-weight: 700;
   color: var(--totumo);
   margin-bottom: 0.4rem; line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 .pcard__desc {
   font-size: 0.82rem;
@@ -427,6 +426,7 @@
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   overflow: hidden;
 }
+/* Precio: SE QUEDA EN SERIF (look editorial) */
 .pcard__price {
   font-family: var(--font-serif);
   font-size: 1.2rem; font-weight: 800;
@@ -455,12 +455,10 @@
 .pcard__btn:first-child { flex: 2; }
 .pcard__btn:hover { border-color: var(--cascara); color: var(--cascara); background: rgba(212,94,0,0.05); }
 .pcard__btn--active { background: var(--cascara); color: var(--avena-lt); border-color: var(--cascara); }
-.pcard__btn--active:hover { background: var(--cascara-dk); color: var(--avena-lt); }
+.pcard__btn--active:hover { background: var(--cascara-dk); color: var(--avena-lt); border-color: var(--cascara-dk); }
 .pcard__btn--danger:hover { border-color: #c0392b; color: #c0392b; background: rgba(192,57,43,0.08); }
 
-/* ═══════════════════════════════════════════════════
-   GRID DE CATEGORÍAS
-   ═══════════════════════════════════════════════════ */
+/* GRID DE CATEGORÍAS */
 .cat-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -500,10 +498,11 @@
   margin-bottom: 0.5rem;
 }
 .cat-card__name {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.1rem; font-weight: 700;
   color: var(--totumo);
   margin-bottom: 0.3rem;
+  letter-spacing: -0.01em;
 }
 .cat-card__desc {
   font-size: 0.82rem;
@@ -523,9 +522,7 @@
 }
 .cat-card__actions .pcard__btn { padding: 0.5rem 0.7rem; min-width: 48px; }
 
-/* ═══════════════════════════════════════════════════
-   MODAL (crear/editar producto o categoría)
-   ═══════════════════════════════════════════════════ */
+/* MODAL */
 .pm-overlay {
   position: fixed; inset: 0; z-index: 500;
   background: rgba(30,2,15,0.75);
@@ -566,9 +563,10 @@
   margin-bottom: 0.35rem;
 }
 .pm__title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.35rem; font-weight: 800;
   color: var(--totumo); line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 .pm__close {
   width: 2.25rem; height: 2.25rem;
@@ -585,7 +583,6 @@
 
 .pm__body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
 
-/* Dropzone de imagen */
 .pm__dropzone {
   width: 100%;
   border-radius: var(--r-lg);
@@ -607,9 +604,10 @@
 .pm__upload:hover { background: rgba(212,94,0,0.04); }
 .pm__upload-ico { font-size: 2.5rem; opacity: 0.45; }
 .pm__upload-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1rem; font-weight: 700;
   color: var(--totumo);
+  letter-spacing: -0.01em;
 }
 .pm__upload-hint { font-size: 0.75rem; color: var(--brasas); opacity: 0.5; }
 
@@ -641,7 +639,6 @@
 }
 .pm__replace:hover { text-decoration: underline; }
 
-/* Grid del form */
 .pm__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -687,7 +684,6 @@
 .pm__foot .btn { flex: 1; min-width: 140px; }
 @media (min-width: 480px) { .pm__foot .btn { flex: 0 0 auto; } }
 
-/* Select nativo estilizado */
 select.finput {
   appearance: none;
   -webkit-appearance: none;
@@ -695,11 +691,4 @@ select.finput {
   background-repeat: no-repeat;
   background-position: right 1rem center;
   padding-right: 2.5rem;
-}
-
-.sidebar__logo {
-  width: 160px; height: 24px;
-  color: var(--avena-lt);
-  -webkit-mask-position: left center;
-          mask-position: left center;
 }

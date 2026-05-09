@@ -21,9 +21,9 @@ export const hitos = [
     id: 3,
     anio: '2023',
     titulo: 'Cocina Buen Canto',
-    subtitulo: 'El Caney, Cali',
-    descripcion: 'Con un local establecido en El Caney, la marca renació como Cocina Buen Canto. Una propuesta más completa, con parrilla al carbón, bebidas exclusivas y el mismo sabor de siempre.',
-    imagen: null,
+    subtitulo: 'Valle del Lili, Cali',
+    descripcion: 'Con un local establecido en Valle del Lili, la marca renació como Cocina Buen Canto. Una propuesta más completa, con parrilla al carbón, bebidas exclusivas y el mismo sabor de siempre.',
+    imagen: '/images/ahora.png',
     lado: 'izquierda',
   },
 ]

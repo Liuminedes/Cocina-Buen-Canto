@@ -15,9 +15,13 @@
   --avena-lt:    #faf5ea;
   --crema:       #fdfaf3;
 
-  /* Tipografía: Playfair Display (display/serif) + Manrope (UI/body) — equivalentes libres al manual */
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-ui:    'Manrope', -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+  /* Tipografías:
+     - Outfit (display): para TÍTULOS — reemplazo libre de Mozaic Geo del manual
+     - Playfair Display (serif): SOLO para frases editoriales/quotes/refranes
+     - Manrope (UI): texto de cuerpo, botones, labels */
+  --font-serif:   'Playfair Display', Georgia, serif;
+  --font-display: 'Outfit', -apple-system, 'Helvetica Neue', sans-serif;
+  --font-ui:      'Manrope', -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
 
   --r-sm: 6px;
   --r-md: 12px;
@@ -39,7 +43,14 @@ body {
 img { display: block; max-width: 100%; }
 a   { text-decoration: none; color: inherit; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
-h1, h2, h3, h4 { font-family: var(--font-serif); line-height: 1.1; }
+
+/* Por defecto los títulos usan Outfit (display geométrica),
+   los componentes que necesitan serif lo aplican explícitamente */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
 p { font-size: 1.05rem; line-height: 1.9; }
 
 ::-webkit-scrollbar { width: 4px; }
@@ -71,7 +82,14 @@ p { font-size: 1.05rem; line-height: 1.9; }
 
 .sh { text-align: center; margin-bottom: 3.5rem; }
 @media (min-width: 768px) { .sh { margin-bottom: 5rem; } }
-.sh h2 { font-size: clamp(2rem, 5.5vw, 3.5rem); color: var(--totumo); margin: 0.75rem 0 1rem; }
+.sh h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 5.5vw, 3.5rem);
+  color: var(--totumo);
+  margin: 0.75rem 0 1rem;
+  letter-spacing: -0.02em;
+}
 .sh p { font-size: clamp(0.95rem, 2vw, 1.05rem); color: var(--brasas); max-width: 48ch; margin: 0 auto; line-height: 1.9; opacity: 0.72; }
 .sh-divider { width: 3rem; height: 2px; background: var(--cascara); margin: 1rem auto 0; display: block; }
 
@@ -92,10 +110,7 @@ p { font-size: 1.05rem; line-height: 1.9; }
 .btn-outline:hover { background: var(--totumo); color: var(--avena-lt); transform: translateY(-2px); }
 .btn-full { width: 100%; justify-content: center; }
 
-/* ── LOGOS ─────────────────
-   Técnica mask-image: el PNG negro sobre transparente se usa como máscara,
-   el color lo da currentColor/background-color. Permite teñir el logo
-   con cualquier color de la paleta sin perder la transparencia. */
+/* ── LOGOS ───────────────── */
 .logo-mask {
   display: inline-block;
   -webkit-mask-repeat: no-repeat;
@@ -140,7 +155,6 @@ p { font-size: 1.05rem; line-height: 1.9; }
 
 .nav__brand { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
 
-/* Círculo naranja con logo abreviado CBC en crema */
 .nav__badge {
   width: 42px; height: 42px; border-radius: 50%;
   background: var(--cascara);
@@ -154,7 +168,6 @@ p { font-size: 1.05rem; line-height: 1.9; }
   color: var(--avena-lt);
 }
 
-/* Wordmark horizontal en burdeos */
 .nav__wordmark {
   width: 170px; height: 24px;
   color: var(--totumo);
@@ -201,10 +214,13 @@ p { font-size: 1.05rem; line-height: 1.9; }
 .nav__drawer-link {
   display: flex; align-items: center; justify-content: space-between;
   padding: 1rem 0;
-  font-size: 1.4rem; font-family: var(--font-serif); font-weight: 700;
+  font-size: 1.4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
   color: var(--totumo);
   border-bottom: 1px solid rgba(107,31,10,0.08);
   transition: color 0.2s;
+  letter-spacing: -0.01em;
 }
 .nav__drawer-link:hover { color: var(--cascara); }
 .nav__drawer-link::after { content: '\2192'; font-size: 0.95rem; color: var(--cascara); opacity: 0; transition: opacity 0.2s; font-family: var(--font-ui); }
@@ -241,7 +257,6 @@ p { font-size: 1.05rem; line-height: 1.9; }
 @media (min-width: 768px) { .hero__inner { grid-template-columns: 1fr 1fr; padding: 4rem 2rem; } }
 @media (min-width: 1100px) { .hero__inner { grid-template-columns: 1.05fr 0.95fr; gap: 4rem; } }
 
-/* Columna izquierda: centrada en mobile, alineada al inicio en desktop */
 .hero__content {
   display: flex; flex-direction: column; align-items: center;
   text-align: center;
@@ -260,7 +275,6 @@ p { font-size: 1.05rem; line-height: 1.9; }
 }
 .hero__tag-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--cascara); flex-shrink: 0; }
 
-/* Wrap del logo para centrado perfecto */
 .hero__logo-wrap {
   width: 100%;
   display: flex; justify-content: center;
@@ -270,7 +284,6 @@ p { font-size: 1.05rem; line-height: 1.9; }
   .hero__logo-wrap { justify-content: flex-start; }
 }
 
-/* Logo vertical — proporciones reales del PNG: 617 × 404 px */
 .hero__logo {
   display: block;
   width: 100%;
@@ -281,8 +294,10 @@ p { font-size: 1.05rem; line-height: 1.9; }
 @media (min-width: 640px) { .hero__logo { max-width: 480px; } }
 @media (min-width: 1100px) { .hero__logo { max-width: 520px; } }
 
+/* Refrán: SE QUEDA EN SERIF (es una frase editorial del manual) */
 .hero__refran {
-  font-family: var(--font-serif); font-style: italic;
+  font-family: var(--font-serif);
+  font-style: italic;
   font-size: 1rem; color: var(--brasas);
   border-left: 3px solid var(--cascara);
   padding-left: 0.85rem; margin-bottom: 1.25rem; opacity: 0.7;
@@ -290,7 +305,6 @@ p { font-size: 1.05rem; line-height: 1.9; }
   max-width: 40ch;
 }
 @media (max-width: 767px) {
-  /* En mobile el border-left se vería raro con texto centrado; lo dejamos arriba */
   .hero__refran { border-left: none; border-top: 2px solid var(--cascara); padding-left: 0; padding-top: 0.75rem; }
 }
 
@@ -314,10 +328,19 @@ p { font-size: 1.05rem; line-height: 1.9; }
 }
 @media (min-width: 768px) { .hero__stats { justify-content: flex-start; max-width: none; } }
 
-.hero__stat-val { font-family: var(--font-serif); font-size: 1.75rem; font-weight: 800; color: var(--totumo); display: block; line-height: 1; margin-bottom: 0.3rem; }
+/* Stats: Outfit (no serif) — números limpios y geométricos */
+.hero__stat-val {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--totumo);
+  display: block;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.02em;
+}
 .hero__stat-lbl { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--brasas); opacity: 0.55; }
 
-/* Columna derecha: foto del restaurante. En mobile también visible pero más compacta */
 .hero__right {
   position: relative;
   width: 100%;
@@ -348,7 +371,6 @@ p { font-size: 1.05rem; line-height: 1.9; }
   display: block;
 }
 
-/* Sello circular flotante "Desde 2020" */
 .hero__sello {
   position: absolute;
   top: 1.25rem; right: 1.25rem;
@@ -373,10 +395,11 @@ p { font-size: 1.05rem; line-height: 1.9; }
 }
 @media (min-width: 640px) { .hero__sello-top, .hero__sello-bot { font-size: 0.6rem; } }
 .hero__sello-year {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.5rem; font-weight: 900;
   line-height: 1;
   margin: 0.2rem 0 0.25rem;
+  letter-spacing: -0.02em;
 }
 @media (min-width: 640px) { .hero__sello-year { font-size: 1.8rem; } }
 .hero__sello-bot { max-width: 72px; line-height: 1.2; }
@@ -393,6 +416,7 @@ p { font-size: 1.05rem; line-height: 1.9; }
 @media (min-width: 640px) { .hero__chip { left: -1rem; padding: 0.85rem 1.1rem; } }
 @media (min-width: 1100px) { .hero__chip { left: -1.5rem; } }
 .hero__chip-ico { width: 2.1rem; height: 2.1rem; border-radius: 50%; background: rgba(212,94,0,0.25); display: flex; align-items: center; justify-content: center; font-size: 1.05rem; flex-shrink: 0; }
+/* Chip: el "Al carbón" se queda con look editorial → serif */
 .hero__chip strong { display: block; font-family: var(--font-serif); font-size: 0.95rem; color: var(--avena-lt); margin-bottom: 0.1rem; }
 .hero__chip span { font-size: 0.66rem; color: var(--cana); letter-spacing: 0.1em; text-transform: uppercase; }
 
@@ -405,10 +429,16 @@ p { font-size: 1.05rem; line-height: 1.9; }
 .vcard { padding: 1.5rem 1.25rem; border-radius: var(--r-lg); border: 1.5px solid var(--avena-dk); background: var(--avena-lt); transition: border-color 0.3s, transform 0.3s; }
 .vcard:hover { border-color: var(--cascara); transform: translateY(-3px); }
 .vcard__ico { font-size: 1.5rem; margin-bottom: 0.9rem; }
-.vcard__title { font-family: var(--font-serif); font-size: 0.95rem; font-weight: 700; color: var(--totumo); margin-bottom: 0.5rem; }
+.vcard__title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--totumo);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
 .vcard__desc { font-size: 0.85rem; color: var(--brasas); line-height: 1.8; opacity: 0.75; }
 
-/* "Foto del local" reemplazada por composición de marca */
 .qs-brand-showcase {
   border-radius: var(--r-xl);
   background: linear-gradient(135deg, var(--totumo) 0%, #3d0120 60%, var(--brasas) 100%);
@@ -432,6 +462,7 @@ p { font-size: 1.05rem; line-height: 1.9; }
   width: 220px; height: 180px;
   color: var(--avena-lt);
 }
+/* Tagline: SE QUEDA EN SERIF (frase tipo manual: "El que es, anda con los que son.") */
 .qs-brand-showcase__tagline {
   position: relative; z-index: 2;
   font-family: var(--font-serif); font-style: italic;
@@ -471,8 +502,23 @@ p { font-size: 1.05rem; line-height: 1.9; }
   overflow: hidden;
   position: relative;
 }
+.titem__media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  min-height: 12rem;
+  transition: transform 0.4s ease;
+}
+.titem__media:has(.titem__media-img) {
+  background: var(--totumo);
+  border-color: var(--totumo);
+}
+.titem__media:has(.titem__media-img):hover .titem__media-img {
+  transform: scale(1.03);
+}
 .titem__media-year {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(3rem, 8vw, 5rem);
   font-weight: 900;
   color: var(--totumo);
@@ -483,7 +529,14 @@ p { font-size: 1.05rem; line-height: 1.9; }
 .titem__dot { display: none; width: 1rem; height: 1rem; border-radius: 50%; background: var(--cascara); border: 3px solid var(--crema); box-shadow: 0 0 0 3px var(--cascara); flex-shrink: 0; }
 @media (min-width: 768px) { .titem__dot { display: block; } }
 .titem__year { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--cascara); margin-bottom: 0.5rem; }
-.titem__title { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 800; color: var(--totumo); margin-bottom: 0.3rem; }
+.titem__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 800;
+  color: var(--totumo);
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.02em;
+}
 .titem__sub { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cascara); margin-bottom: 0.85rem; }
 .titem__line { width: 2.5rem; height: 2px; background: var(--cascara); margin-bottom: 0.85rem; }
 .titem__desc { font-size: 0.95rem; color: var(--brasas); line-height: 1.9; opacity: 0.78; }
@@ -515,7 +568,13 @@ p { font-size: 1.05rem; line-height: 1.9; }
 @media (min-width: 900px) { .menu-sidebar { display: flex; } }
 
 .menu-sidebar-logo { padding: 0 1.75rem 1.75rem; border-bottom: 1px solid rgba(212,165,90,0.12); margin-bottom: 0.75rem; }
-.menu-sidebar-title { font-family: var(--font-serif); font-size: 1rem; font-weight: 700; color: var(--avena-lt); margin-bottom: 0.2rem; }
+.menu-sidebar-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--avena-lt);
+  margin-bottom: 0.2rem;
+}
 .menu-sidebar-sub { font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cana); opacity: 0.5; }
 
 .menu-cat-btn {
@@ -540,7 +599,7 @@ p { font-size: 1.05rem; line-height: 1.9; }
   padding: 1rem 1.25rem;
   scrollbar-width: none; -ms-overflow-style: none;
   position: sticky;
-  top: 64px;   /* altura del navbar */
+  top: 64px;
   z-index: 50;
   background: #3d0120;
   border-bottom: 1px solid rgba(212,165,90,0.12);
@@ -572,10 +631,16 @@ p { font-size: 1.05rem; line-height: 1.9; }
 
 .menu-content-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(212,165,90,0.1); }
 .menu-content-cat { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--cascara); margin-bottom: 0.4rem; }
-.menu-content-title { font-family: var(--font-serif); font-size: clamp(1.75rem, 5vw, 2.8rem); font-weight: 900; color: var(--avena-lt); margin-bottom: 0.5rem; }
+.menu-content-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5vw, 2.8rem);
+  font-weight: 800;
+  color: var(--avena-lt);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
 .menu-content-desc { font-size: 0.88rem; color: var(--cana); opacity: 0.6; line-height: 1.7; }
 
-/* Tarjetas del menú — rediseño con más personalidad */
 .menu-items-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -597,7 +662,6 @@ p { font-size: 1.05rem; line-height: 1.9; }
   overflow: hidden;
 }
 .mitem::before {
-  /* Acento lateral que aparece en hover */
   content: '';
   position: absolute;
   left: 0; top: 0; bottom: 0; width: 3px;
@@ -628,8 +692,13 @@ p { font-size: 1.05rem; line-height: 1.9; }
 
 .mitem__info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .mitem__name {
-  font-family: var(--font-serif); font-size: 1.02rem; font-weight: 700;
-  color: var(--avena-lt); margin-bottom: 0.35rem; line-height: 1.25;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--avena-lt);
+  margin-bottom: 0.35rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 @media (min-width: 480px) { .mitem__name { font-size: 1.1rem; } }
 .mitem__desc {
@@ -643,6 +712,7 @@ p { font-size: 1.05rem; line-height: 1.9; }
   display: flex; align-items: center; gap: 0.65rem;
   flex-wrap: wrap; margin-top: auto;
 }
+/* Precios: SE QUEDAN EN SERIF (look editorial elegante) */
 .mitem__price {
   font-family: var(--font-serif);
   font-size: 1.15rem; font-weight: 800;
@@ -700,9 +770,11 @@ p { font-size: 1.05rem; line-height: 1.9; }
 @media (min-width: 640px) { .modal__body { padding: 2rem 2.5rem 2.75rem; } }
 
 .modal__cat { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--cascara); margin-bottom: 0.4rem; }
+/* Nombre del producto en modal: SE QUEDA EN SERIF (look editorial protagonista) */
 .modal__name { font-family: var(--font-serif); font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 900; color: var(--totumo); margin-bottom: 0.75rem; line-height: 1.1; }
 .modal__line { width: 2.5rem; height: 2px; background: var(--cascara); margin-bottom: 1rem; }
 .modal__desc { font-size: 0.95rem; color: var(--brasas); line-height: 1.9; opacity: 0.8; margin-bottom: 1.5rem; }
+/* Precio destacado en modal: SE QUEDA EN SERIF */
 .modal__price { font-family: var(--font-serif); font-size: 2rem; font-weight: 900; color: var(--cascara); display: block; margin-bottom: 1.5rem; }
 .modal__wa {
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
@@ -720,9 +792,16 @@ p { font-size: 1.05rem; line-height: 1.9; }
 
 .rcard { padding: 1.5rem; border-radius: var(--r-lg); border: 1.5px solid var(--avena-dk); background: var(--avena-lt); }
 .rcard__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.85rem; }
-.rcard__name { font-family: var(--font-serif); font-size: 1rem; font-weight: 700; color: var(--totumo); margin-bottom: 0.2rem; }
+.rcard__name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--totumo);
+  margin-bottom: 0.2rem;
+}
 .rcard__date { font-size: 0.72rem; color: var(--brasas); opacity: 0.45; }
 .rcard__div { width: 1.5rem; height: 2px; background: var(--cascara); margin-bottom: 0.85rem; }
+/* Texto de la reseña: serif (es una cita) */
 .rcard__text { font-size: 0.9rem; color: var(--brasas); line-height: 1.85; font-style: italic; opacity: 0.78; }
 
 .stars { display: flex; gap: 2px; }
