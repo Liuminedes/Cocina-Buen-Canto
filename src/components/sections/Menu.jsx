@@ -115,22 +115,24 @@ export default function Menu() {
     <section id="menu" className="menu-page">
       <div className="menu-page-inner">
         <aside className="menu-sidebar">
-          <div className="menu-sidebar-logo">
-            <div className="menu-sidebar-title">Nuestro Menú</div>
-            <div className="menu-sidebar-sub">Cocina Buen Canto</div>
-          </div>
-          {visibles.map((c) => (
-            <button
-              key={c.id}
-              className={`menu-cat-btn${activa === c.id ? ' active' : ''}`}
-              onClick={() => setActiva(c.id)}
-            >
-              <span className="menu-cat-ico">{c.emoji}</span>
-              <span className="menu-cat-name">{c.nombre}</span>
-              <span className="menu-cat-count">{c.items.length}</span>
-            </button>
-          ))}
-        </aside>
+  <div className="menu-sidebar__inner">
+    <div className="menu-sidebar-logo">
+      <div className="menu-sidebar-title">Nuestro Menú</div>
+      <div className="menu-sidebar-sub">Cocina Buen Canto</div>
+    </div>
+    {visibles.map((c) => (
+      <button
+        key={c.id}
+        className={`menu-cat-btn${activa === c.id ? ' active' : ''}`}
+        onClick={() => setActiva(c.id)}
+      >
+        <span className="menu-cat-ico">{c.emoji}</span>
+        <span className="menu-cat-name">{c.nombre}</span>
+        <span className="menu-cat-count">{c.items.length}</span>
+      </button>
+    ))}
+  </div>
+</aside>
 
         <div>
           <div className="menu-tabs-mobile">

@@ -542,30 +542,39 @@ p { font-size: 1.05rem; line-height: 1.9; }
 .titem__desc { font-size: 0.95rem; color: var(--brasas); line-height: 1.9; opacity: 0.78; }
 
 /* ── MENU ───────────────── */
-.menu-page { background: #3d0120; min-height: 100vh; }
+.menu-page { background: var(--totumo); min-height: 100vh; }
 
 .menu-page-inner {
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 64px);
 }
 @media (min-width: 900px) {
-  .menu-page-inner { flex-direction: row; }
+  .menu-page-inner { flex-direction: row; align-items: stretch; }
 }
 
 .menu-sidebar {
-  background: rgba(0,0,0,0.25);
-  padding: 2rem 0;
+  background: rgba(0,0,0,0.35);
   display: none;
   flex-direction: column;
   width: 260px;
   flex-shrink: 0;
+}
+@media (min-width: 900px) { .menu-sidebar { display: flex; } }
+.menu-sidebar::-webkit-scrollbar { display: none; }
+
+/* Contenido interno: este sí es sticky y scrolleable */
+.menu-sidebar__inner {
   position: sticky;
   top: 64px;
-  height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px);
   overflow-y: auto;
+  padding: 2rem 0;
   scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
 }
-.menu-sidebar::-webkit-scrollbar { display: none; }
-@media (min-width: 900px) { .menu-sidebar { display: flex; } }
+.menu-sidebar__inner::-webkit-scrollbar { display: none; }
 
 .menu-sidebar-logo { padding: 0 1.75rem 1.75rem; border-bottom: 1px solid rgba(212,165,90,0.12); margin-bottom: 0.75rem; }
 .menu-sidebar-title {
@@ -601,7 +610,7 @@ p { font-size: 1.05rem; line-height: 1.9; }
   position: sticky;
   top: 64px;
   z-index: 50;
-  background: #3d0120;
+  background: var(--brasas);
   border-bottom: 1px solid rgba(212,165,90,0.12);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 4px 12px -4px rgba(0,0,0,0.3);
@@ -714,9 +723,10 @@ p { font-size: 1.05rem; line-height: 1.9; }
 }
 /* Precios: SE QUEDAN EN SERIF (look editorial elegante) */
 .mitem__price {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 1.15rem; font-weight: 800;
   color: var(--cascara);
+  letter-spacing: -0.02em;
 }
 .mitem__badge {
   font-size: 0.56rem; font-weight: 700;
@@ -771,11 +781,26 @@ p { font-size: 1.05rem; line-height: 1.9; }
 
 .modal__cat { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--cascara); margin-bottom: 0.4rem; }
 /* Nombre del producto en modal: SE QUEDA EN SERIF (look editorial protagonista) */
-.modal__name { font-family: var(--font-serif); font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 900; color: var(--totumo); margin-bottom: 0.75rem; line-height: 1.1; }
+.modal__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  font-weight: 800;
+  color: var(--totumo);
+  margin-bottom: 0.75rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
 .modal__line { width: 2.5rem; height: 2px; background: var(--cascara); margin-bottom: 1rem; }
 .modal__desc { font-size: 0.95rem; color: var(--brasas); line-height: 1.9; opacity: 0.8; margin-bottom: 1.5rem; }
-/* Precio destacado en modal: SE QUEDA EN SERIF */
-.modal__price { font-family: var(--font-serif); font-size: 2rem; font-weight: 900; color: var(--cascara); display: block; margin-bottom: 1.5rem; }
+.modal__price {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--cascara);
+  display: block;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
 .modal__wa {
   display: flex; align-items: center; justify-content: center; gap: 0.5rem;
   width: 100%; padding: 1rem; background: #25D366; color: #fff;
